@@ -28,7 +28,12 @@ public class ComputationAssign2 {
     public boolean b = true;
     public boolean contain = false;
 
-    ComputationAssign2() {
+
+    ComputationAssign2(){
+        this(new TranSystem());
+    }
+    ComputationAssign2(TranSystem ts) {
+        this.ts = ts;
         allNode = ts.allNode;
         initnode = ts.getInit();
         tempnode = new ArrayList<>();
@@ -90,7 +95,7 @@ public class ComputationAssign2 {
     }
 
     public MapNode nodenotinreachfromts() {
-        for (MapNode mapNode : initnode) {
+        for (MapNode mapNode : allNode) {
             if (!reachable.contains(mapNode)) {
                 return mapNode;
             }
@@ -103,7 +108,8 @@ public class ComputationAssign2 {
 
     public static void main(String[] args) {
         // TODO code application logic here
-        ComputationAssign2 ass2 = new ComputationAssign2();
+        TsFileIO io = new TsFileIO();
+        ComputationAssign2 ass2 = new ComputationAssign2(io.readTS());
         ass2.DFS();
 
     }
