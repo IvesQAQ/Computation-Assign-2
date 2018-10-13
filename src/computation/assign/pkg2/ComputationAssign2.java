@@ -28,10 +28,10 @@ public class ComputationAssign2 {
     public boolean b = true;
     public boolean contain = false;
 
-
-    ComputationAssign2(){
+    ComputationAssign2() {
         this(new TranSystem());
     }
+
     ComputationAssign2(TranSystem ts) {
         this.ts = ts;
         allNode = ts.allNode;
@@ -48,16 +48,20 @@ public class ComputationAssign2 {
             if (!tempnode.isEmpty()) {
                 node = nodenotinreachfromts();
             }
-            if (!node.next.isEmpty()) {
-                visit(node);
-            }else{
-                reachable.add(node);
-                allNode1.remove(node);
+            if (node != null) {
+                if (!node.next.isEmpty()) {
+                    visit(node);
+                } else {
+                    reachable.add(node);
+                    allNode1.remove(node);
+                }
             }
             for (MapNode mapNode : reachable) {
                 System.out.println(mapNode.name);
-            }System.out.println("\n");
+            }
+            System.out.println("\n");
         }
+        System.out.println(b);
     }
 
     public void visit(MapNode node) {
@@ -95,12 +99,13 @@ public class ComputationAssign2 {
     }
 
     public MapNode nodenotinreachfromts() {
-        for (MapNode mapNode : allNode) {
+        for (MapNode mapNode : allNode1) {
             if (!reachable.contains(mapNode)) {
                 return mapNode;
             }
-            if(mapNode.equals(allNode1.get(allNode1.size()-1))){
+            if (mapNode.equals(allNode1.get(allNode1.size() - 1))) {
                 allNode1.clear();
+                break;
             }
         }
         return null;
