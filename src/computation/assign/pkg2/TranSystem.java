@@ -17,5 +17,10 @@ public class TranSystem {
     public TranSystem() {
         this.init = new ArrayList<>();
     }
+
+    public ArrayList<MapNode> getInit() {
+        return init;
+    }
+    
     
 }
