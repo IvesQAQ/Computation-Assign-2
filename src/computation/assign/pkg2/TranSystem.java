@@ -13,9 +13,11 @@ import java.util.ArrayList;
  */
 public class TranSystem {
     public ArrayList<MapNode> init;
+    public ArrayList<MapNode> allNode;
     
     public TranSystem() {
         this.init = new ArrayList<>();
+        this.allNode = new ArrayList<>();
     }
 
     public ArrayList<MapNode> getInit() {
