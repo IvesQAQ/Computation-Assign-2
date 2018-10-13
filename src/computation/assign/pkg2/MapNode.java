@@ -18,6 +18,8 @@ public class MapNode {
 
     public MapNode(String name) {
         this.name = name;
+        next = new ArrayList<>();
+        AP = new ArrayList<>();
     }
     public MapNode() {
         next = new ArrayList<>();

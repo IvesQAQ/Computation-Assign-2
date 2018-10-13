@@ -20,6 +20,7 @@ public class ComputationAssign2 {
     //inital node mapnode
     public TranSystem ts = new TranSystem();
     public ArrayList<MapNode> initnode;
+    public ArrayList<MapNode> allNode1;
     public ArrayList<MapNode> tempnode;
     public ArrayList<MapNode> reachable;
     public ArrayList<MapNode> allNode;
@@ -28,14 +29,16 @@ public class ComputationAssign2 {
     public boolean contain = false;
 
     ComputationAssign2() {
+        allNode = ts.allNode;
         initnode = ts.getInit();
         tempnode = new ArrayList<>();
+        allNode1 = allNode;
         reachable = new ArrayList<>();
     }
 
     public void DFS() {
 //       Iterator<MapNode> mapiterator = initnode.iterator();
-        while (!initnode.isEmpty() && b) {
+        while (!allNode1.isEmpty() && b) {
             MapNode node = initnode.get(0);
             if (!tempnode.isEmpty()) {
                 node = nodenotinreachfromts();
@@ -43,8 +46,8 @@ public class ComputationAssign2 {
             if (!node.next.isEmpty()) {
                 visit(node);
             }else{
-//                reachable.add(node);
-                initnode.clear();
+                reachable.add(node);
+                allNode1.remove(node);
             }
             for (MapNode mapNode : reachable) {
                 System.out.println(mapNode.name);
@@ -90,6 +93,9 @@ public class ComputationAssign2 {
         for (MapNode mapNode : initnode) {
             if (!reachable.contains(mapNode)) {
                 return mapNode;
+            }
+            if(mapNode.equals(allNode1.get(allNode1.size()-1))){
+                allNode1.clear();
             }
         }
         return null;
