@@ -12,12 +12,11 @@ import java.util.ArrayList;
  * @author 琉小璃
  */
 public class MapNode {
-    public ArrayList<String> name;
+    public String name;
     public ArrayList<MapNode> next;
     public ArrayList<String> AP;
 
     public MapNode() {
-        name = new ArrayList<>();
         next = new ArrayList<>();
         AP = new ArrayList<>();
     }
