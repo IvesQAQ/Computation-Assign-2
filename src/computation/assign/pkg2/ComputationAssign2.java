@@ -6,6 +6,7 @@
 package computation.assign.pkg2;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 
 /**
@@ -22,10 +23,12 @@ public class ComputationAssign2 {
     public ArrayList<MapNode> initnode;
     public ArrayList<MapNode> allNode;
     public ArrayList<MapNode> tempnode;
-    public ArrayList<MapNode> reachable;
+    public HashSet<MapNode> reachable;
+    public boolean breakcheck = false;
 
     public boolean b = true;
     public boolean contain = false;
+    public int index = 0;
 
     ComputationAssign2() {
         this(new TranSystem());
@@ -36,7 +39,8 @@ public class ComputationAssign2 {
         allNode = ts.allNode;
         initnode = ts.getInit();
         tempnode = new ArrayList<>();
-        reachable = new ArrayList<>();
+        reachable = new HashSet<>();
+        // been = new HashSet<>();
     }
 
     public void DFS() {
@@ -44,67 +48,90 @@ public class ComputationAssign2 {
         for (String formul : ts.formul) {
             while (!allNode.isEmpty() && b) {
                 MapNode node = initnode.get(0);
-                if (!tempnode.isEmpty()) {
+//                if (!tempnode.isEmpty()) {
                     node = nodenotinreachfromts();
-                }
+//                }
                 if (node != null) {
                     if (!node.next.isEmpty()) {
-                        visit(node, formul);
+                        breakcheck = visit(node, formul);
                     } else {
-                        reachable.add(node);
+                        //  reachable.add(node);
                         allNode.remove(node);
                     }
                 }
                 for (MapNode mapNode : reachable) {
-                    System.out.print(mapNode.name+" ");
+                    System.out.print(mapNode.name + " ");
                 }
                 System.out.print("\n");
+                 if(!breakcheck)break;
             }
-            System.out.println("Formular: "+formul);
-            System.out.println("output: "+ b+((b)?" (Yes)":" (NO)")+"\n");
+            System.out.println("Formular: " + formul);
+            System.out.println("output: " + breakcheck + ((breakcheck) ? " (Yes)" : " (NO)") + "\n");
         }
     }
 
-    public void visit(MapNode node,String formula) {
+    public boolean visit(MapNode node, String formula) {
         tempnode.add(node);
         reachable.add(node);
+        System.out.println("loop node " + node.name);
         do {
+            if (formula.toLowerCase().contains("or")) {
+                String[] form = formula.toLowerCase().replaceAll("\\s+", "").split("or");
+                b = b && (tempnode.get(tempnode.size() - 1).AP.contains(form[0]) || tempnode.get(tempnode.size() - 1).AP.contains(form[1]));
+                 if(!b)return false;
+            } else if (formula.toLowerCase().contains("imp") && formula.toLowerCase().contains("not")) {
+                String[] form = formula.toLowerCase().replaceAll("\\s+", "").split("imp");
+                if (form[0].contains("not")) {
+                    //all false
+                    b = b && (tempnode.get(tempnode.size() - 1).AP.contains(form[0].split("not")[0]) || tempnode.get(tempnode.size() - 1).AP.contains(form[1]));
+                    if(!b)return false;
+                } else {
+                    //all true
+                    b = b && (!tempnode.get(tempnode.size() - 1).AP.contains(form[0]) || !tempnode.get(tempnode.size() - 1).AP.contains(form[1].split("not")[1]));
+                     if(!b){
+                         return false;
+                     }
+                }
+            } else if (formula.toLowerCase().contains("NOT")) {
+                String[] form = formula.toLowerCase().replaceAll("\\s+", "").split("not");
+                b = b && !tempnode.get(tempnode.size() - 1).AP.contains(form[0]);
+                 if(!b)return false;
+            } else if (formula.toLowerCase().contains("and ")) {
+                String[] form = formula.toLowerCase().replaceAll("\\s+", "").split("and");
+                b = b && (tempnode.get(tempnode.size() - 1).AP.contains(form[0]) && tempnode.get(tempnode.size() - 1).AP.contains(form[1]));
+                 if(!b)return false;
+            } else if (formula.toLowerCase().contains("imp ")) {
+                String[] form = formula.toLowerCase().replaceAll("\\s+", "").split("imp");
+                b = b && (!tempnode.get(tempnode.size() - 1).AP.contains(form[0]) || tempnode.get(tempnode.size() - 1).AP.contains(form[1]));
+            } else {
+                b = b && tempnode.get(tempnode.size() - 1).AP.contains(formula);
+            }
             //get the last node in tempnode
             MapNode node1 = tempnode.get(tempnode.size() - 1);
             MapNode notinreach = getnodenotinreach(node1);
-            if (contain  ) {
-                tempnode.remove(node);
-                if(formula.toLowerCase().contains("or")){
-                    String[] form = formula.toLowerCase().replaceAll("\\s+", "").split("or");
-                    b = b && (node.AP.contains(form[0]) || node.AP.contains(form[1]));
-                }else if (formula.toLowerCase().contains("imp") && formula.toLowerCase().contains("not")) {
-                    String[] form = formula.toLowerCase().replaceAll("\\s+", "").split("imp");
-                    if (form[0].contains("not")) {
-                        b = b && (node.AP.contains(form[0].split("not")[0]) || node.AP.contains(form[1]));
-                    } else {
-                        b = b && (!node.AP.contains(form[0]) || node.AP.contains(form[1].split("not")[0]));
-                    }
-                }else if(formula.toLowerCase().contains("NOT")){
-                    String[] form = formula.toLowerCase().replaceAll("\\s+", "").split("not");
-                    b = b && !node.AP.contains(form[0]);
-                }else if(formula.toLowerCase().contains("and ")){
-                    String[] form = formula.toLowerCase().replaceAll("\\s+", "").split("and");
-                    b = b && (node.AP.contains(form[0]) && node.AP.contains(form[1]));
-                }else if(formula.toLowerCase().contains("imp ")){
-                    String[] form = formula.toLowerCase().replaceAll("\\s+", "").split("imp");
-                    b = b && (!node.AP.contains(form[0]) || node.AP.contains(form[1]));
-                }else{
-                     b = b && node.AP.contains(formula) ;
-                }
-//                break;
+
+            if (notinreach.name == null) {
+                tempnode.remove(node1);
             } else {
-                MapNode node2 = notinreach;
-                tempnode.add(node2);
-                reachable.add(node2);
+                if (notinreach.next.equals(null)) {
+                    tempnode.remove(notinreach);
+                } else {
+                    tempnode.add(notinreach);
+                    reachable.add(notinreach);
+                }
             }
 
-        } while (tempnode.isEmpty() || !b);
+        } while (!tempnode.isEmpty() || !b);
+        return true;
+    }
 
+    private boolean checkalladdednode(MapNode node) {
+        for (MapNode mapNode : node.next) {
+            if (!reachable.contains(mapNode)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public MapNode getnodenotinreach(MapNode node) {
@@ -112,9 +139,9 @@ public class ComputationAssign2 {
         for (MapNode mapNode : node.next) {
             if (reachable.contains(mapNode)) {
                 contain = true;
-                break;
             } else {
                 temp = mapNode;
+                break;
             }
         }
         return temp;
@@ -138,7 +165,7 @@ public class ComputationAssign2 {
         TsFileIO io = new TsFileIO();
         ComputationAssign2 ass2 = new ComputationAssign2(io.readTS());
         ass2.DFS();
-        
+
     }
 
 }
