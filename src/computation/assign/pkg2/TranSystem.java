@@ -14,10 +14,12 @@ import java.util.ArrayList;
 public class TranSystem {
     public ArrayList<MapNode> init;
     public ArrayList<MapNode> allNode;
+    public ArrayList<String> formul;
     
     public TranSystem() {
         this.init = new ArrayList<>();
         this.allNode = new ArrayList<>();
+        this.formul = new ArrayList<>();
     }
 
     public ArrayList<MapNode> getInit() {

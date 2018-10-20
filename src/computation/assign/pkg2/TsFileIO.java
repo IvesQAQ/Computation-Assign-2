@@ -12,8 +12,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.AbstractSet;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
@@ -24,7 +27,8 @@ public class TsFileIO {
     public static final String ANSI_GREEN = "\u001B[32m";
     public static final String ANSI_BLUE = "\u001B[34m";
     
-    private final String DEFAULT_TS_NAME = "defTS.txt";
+    private final String DEFAULT_TS_NAME = "DefaultTsInput.txt";
+    private final String DEFAULT_OUT_NAME = "DefaultTsOutput.txt";
 
     public TsFileIO() {
     }
@@ -105,6 +109,14 @@ public class TsFileIO {
                          if (!SInFirst) throw new IndexOutOfBoundsException();
                          System.out.println("AP "+div[1]);
                         break;
+                    case "Formula":
+                    case "FORMULA":
+                    case "formula":
+                        System.out.println("formula " + div[1]);
+                        for (String brack : div[1].replaceAll("\\s", "").split(",")) {
+                            TS.formul.add(brack.replaceAll("[{}()]", ""));
+                        }
+                        break;
                 }
             }
      
@@ -115,7 +127,7 @@ public class TsFileIO {
                 System.out.println(ANSI_GREEN+"-------Transition System File Successfully read!--------"+ANSI_RESET);
                 return TS;
             } catch (IndexOutOfBoundsException e) {
-                System.err.println("错误：图没有开始点？（I） 没有开始点怎么DFS？   "+e);
+                System.err.println("Error: No initial Stats. Cannot DFS Exception. 错误：图没有开始点？（I） 没有开始点怎么DFS？   "+e);
                 return null;
             }
         } catch (IOException exp) {
@@ -125,7 +137,7 @@ public class TsFileIO {
             System.err.println("Index Error In <FileIO readTS> " + exp);
             return null;
         } catch (IndexOutOfBoundsException e) {
-            System.err.println("错误：能不能吧文件里面S放在第一行? 不然我就要抛S不在第一行Exception   ");
+            System.err.println("Error: State not at first line of file Exception. 错误：能不能吧文件里面S放在第一行? 不然我就要抛S不在第一行Exception   ");
             return null;
         }
     }
@@ -137,7 +149,7 @@ public class TsFileIO {
      * @return boolean 是否成功输出
      */
     public boolean writeTs(TranSystem ts) {
-        return writeTs(ts, DEFAULT_TS_NAME);
+        return writeTs(ts, DEFAULT_OUT_NAME);
     }
 
     public boolean writeTs(TranSystem ts, String filePosit) {
@@ -169,8 +181,18 @@ public class TsFileIO {
             }
             temp = temp.substring(0, temp.length() - 2);
             temp += "}\n";
-
-            temp += "AP = {}\n";
+            
+            HashSet<String> allAP = new HashSet<>();
+            ts.allNode.forEach((node) -> {
+                node.AP.forEach((ap) -> {
+                    allAP.add(ap);
+                });
+            });
+            
+            temp += "AP = {";
+            temp = allAP.stream().map((string) -> string+", ").reduce(temp, String::concat);
+            temp = temp.substring(0, temp.length() - 2);
+            temp +="}\n";
             
             for (MapNode nod : ts.allNode) {
                 temp += "L(" + nod.name + ") = {";
