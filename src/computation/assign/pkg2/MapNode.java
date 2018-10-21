@@ -9,7 +9,8 @@ import java.util.ArrayList;
 
 /**
  *
- * @author 琉小璃
+ * @author  15912741    Peter Wang
+ *           15890117    Harry Yao
  */
 public class MapNode {
     public String name;
@@ -42,8 +43,5 @@ public class MapNode {
     public ArrayList<String> getAP() {
         return AP;
     }
-    
-    
-    
-    
+  
 }

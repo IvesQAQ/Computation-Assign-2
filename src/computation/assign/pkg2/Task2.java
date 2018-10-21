@@ -12,7 +12,8 @@ import java.util.Queue;
 
 /**
  *
- * @author 1
+ * @author  15912741    Peter Wang
+ *           15890117    Harry Yao
  */
 public class Task2 {
     
@@ -124,7 +125,6 @@ public class Task2 {
         }
             check = node;
         }
-        
         
         return check;
     }
