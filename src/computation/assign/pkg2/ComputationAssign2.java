@@ -7,11 +7,11 @@ package computation.assign.pkg2;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 
 /**
  *
- * @author
+ * @author  15912741    Peter Wang
+ *           15890117    Harry Yao
  */
 public class ComputationAssign2 {
 
@@ -45,11 +45,9 @@ public class ComputationAssign2 {
         initnode = ts.getInit();
         tempnode = new ArrayList<>();
         reachable = new HashSet<>();
-        // been = new HashSet<>();
     }
 
     public void DFS() {
-//       Iterator<MapNode> mapiterator = initnode.iterator();
         for (String formul : ts.formul) {
             long timeDurtaoin = System.nanoTime();
             b=true;
@@ -58,14 +56,11 @@ public class ComputationAssign2 {
             }
             while (!allNode.isEmpty() && b) {
                 MapNode node = initnode.get(0);
-//                if (!tempnode.isEmpty()) {
                     node = nodenotinreachfromts();
-//                }
                 if (node != null) {
                     if (!node.next.isEmpty()) {
                         breakcheck = visit(node, formul);
                     } else {
-                        //  reachable.add(node);
                         allNode.remove(node);
                     }
                 }
@@ -147,15 +142,6 @@ public class ComputationAssign2 {
         return true;
     }
 
-    private boolean checkalladdednode(MapNode node) {
-        for (MapNode mapNode : node.next) {
-            if (!reachable.contains(mapNode)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public MapNode getnodenotinreach(MapNode node) {
         MapNode temp = new MapNode();
         for (MapNode mapNode : node.next) {
@@ -183,12 +169,10 @@ public class ComputationAssign2 {
     }
 
     public static void main(String[] args) {
-        // TODO code application logic here
         TsFileIO io = new TsFileIO();
         ComputationAssign2 ass2 = new ComputationAssign2(io.readTS());
         ass2.DFS();
-
-        
+        //reading txt file for implment task2
         ComputationAssign2 task2 = new ComputationAssign2(io.readTS("task2.txt"));
         task2.DFS();
     }

@@ -20,7 +20,8 @@ import java.util.Set;
 
 /**
  *
- * @author 1
+ * @author  15912741    Peter Wang
+ *           15890117    Harry Yao
  */
 public class TsFileIO {
     public static final String ANSI_RESET = "\u001B[0m";
