@@ -20,7 +20,7 @@ import java.util.Set;
 
 /**
  *
- * @author 琉小璃
+ * @author 1
  */
 public class TsFileIO {
     public static final String ANSI_RESET = "\u001B[0m";
@@ -148,11 +148,16 @@ public class TsFileIO {
      * @param ts
      * @return boolean 是否成功输出
      */
+    
     public boolean writeTs(TranSystem ts) {
         return writeTs(ts, DEFAULT_OUT_NAME);
     }
+    
+    public boolean writeTs(TranSystem ts,String propoerty) {
+        return writeTs(ts, DEFAULT_OUT_NAME, "");
+    }
 
-    public boolean writeTs(TranSystem ts, String filePosit) {
+    public boolean writeTs(TranSystem ts, String filePosit, String property) {
         try {
             FileOutputStream outSt = new FileOutputStream(filePosit);
             OutputStreamWriter writer = new OutputStreamWriter(outSt, "UTF-8");
@@ -204,7 +209,11 @@ public class TsFileIO {
             }
             temp = temp.substring(0, temp.length() - 2);
 
+            if(!property.equals(""))
+                temp+="\nFormula = {"+property+"}";
+            
             writer.write(temp);
+            System.out.println(ANSI_GREEN+"-------Transition System File Successfully Write!--------"+ANSI_RESET);
             writer.close();
             outSt.close();
             return true;

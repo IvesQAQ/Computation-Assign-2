@@ -22,6 +22,7 @@ public class ComputationAssign2 {
     public TranSystem ts = new TranSystem();
     public ArrayList<MapNode> initnode;
     public ArrayList<MapNode> allNode;
+    public ArrayList<MapNode> allNodeCopy;
     public ArrayList<MapNode> tempnode;
     public HashSet<MapNode> reachable;
     public boolean breakcheck = false;
@@ -37,6 +38,10 @@ public class ComputationAssign2 {
     ComputationAssign2(TranSystem ts) {
         this.ts = ts;
         allNode = ts.allNode;
+        allNodeCopy= new ArrayList<>();
+        for (MapNode mapNode : ts.allNode) {
+            this.allNodeCopy.add(mapNode);
+        }
         initnode = ts.getInit();
         tempnode = new ArrayList<>();
         reachable = new HashSet<>();
@@ -46,6 +51,10 @@ public class ComputationAssign2 {
     public void DFS() {
 //       Iterator<MapNode> mapiterator = initnode.iterator();
         for (String formul : ts.formul) {
+            b=true;
+            for (MapNode mapNode : this.allNodeCopy) {
+                this.allNode.add(mapNode);
+            }
             while (!allNode.isEmpty() && b) {
                 MapNode node = initnode.get(0);
 //                if (!tempnode.isEmpty()) {
@@ -75,7 +84,17 @@ public class ComputationAssign2 {
         reachable.add(node);
         System.out.println("loop node " + node.name);
         do {
-            if (formula.toLowerCase().contains("or")) {
+            if (formula.toLowerCase().contains("morethan1")) {
+                int tempint=0;
+                for (String string : tempnode.get(tempnode.size() - 1).AP) {
+                   if(string.contains("2"))tempint++;
+                }
+                if(tempint>1)
+                    b = b && false;
+                else
+                     b = b && true;
+                 if(!b)return false;
+            } else if (formula.toLowerCase().contains("or")) {
                 String[] form = formula.toLowerCase().replaceAll("\\s+", "").split("or");
                 b = b && (tempnode.get(tempnode.size() - 1).AP.contains(form[0]) || tempnode.get(tempnode.size() - 1).AP.contains(form[1]));
                  if(!b)return false;
@@ -103,7 +122,7 @@ public class ComputationAssign2 {
             } else if (formula.toLowerCase().contains("imp ")) {
                 String[] form = formula.toLowerCase().replaceAll("\\s+", "").split("imp");
                 b = b && (!tempnode.get(tempnode.size() - 1).AP.contains(form[0]) || tempnode.get(tempnode.size() - 1).AP.contains(form[1]));
-            } else {
+            }else {
                 b = b && tempnode.get(tempnode.size() - 1).AP.contains(formula);
             }
             //get the last node in tempnode
@@ -166,6 +185,9 @@ public class ComputationAssign2 {
         ComputationAssign2 ass2 = new ComputationAssign2(io.readTS());
         ass2.DFS();
 
+        
+        ComputationAssign2 task2 = new ComputationAssign2(io.readTS("task2.txt"));
+        task2.DFS();
     }
 
 }

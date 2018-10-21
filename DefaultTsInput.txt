@@ -4,5 +4,5 @@ Act = {α,β,γ}
 I = {s0}
 AP = {a, b}
 L(s0) = {a}, L(s1) = {a}, L(s2) = {a, b}, L(s3) = {b}, L(s4) = {b}, L(s10) = {a}, L(s13) = {a}, L(s12) = {a, b}, L(s11) = {b}, L(s14) = {b},L(s5) = {a}, L(s7) = {a}, L(s8) = {a, b}, L(s6) = {b}, L(s9) = {b},L(s15) = {a},L(s16)=(a)
-Formula = {a IMP (NOT b)}
+Formula = { a IMP (NOT b),a OR b }
 
