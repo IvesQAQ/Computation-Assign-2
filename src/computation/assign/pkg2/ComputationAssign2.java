@@ -51,6 +51,7 @@ public class ComputationAssign2 {
     public void DFS() {
 //       Iterator<MapNode> mapiterator = initnode.iterator();
         for (String formul : ts.formul) {
+            long timeDurtaoin = System.nanoTime();
             b=true;
             for (MapNode mapNode : this.allNodeCopy) {
                 this.allNode.add(mapNode);
@@ -76,6 +77,8 @@ public class ComputationAssign2 {
             }
             System.out.println("Formular: " + formul);
             System.out.println("output: " + breakcheck + ((breakcheck) ? " (Yes)" : " (NO)") + "\n");
+            System.out.println("Time use: " + (System.nanoTime() - timeDurtaoin)+" nanoseconds.");
+            System.out.println("Used Memory：" +(Runtime.getRuntime().totalMemory() -  Runtime.getRuntime().freeMemory())/(1024 * 1024)); 
         }
     }
 
